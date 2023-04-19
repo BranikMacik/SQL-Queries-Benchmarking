@@ -9,7 +9,7 @@ package com.macko.services;
 
 public class DatabaseEnums {
     //Database URL used for database connectivity
-    public static final String DB_URL = "";
+    public static final String DB_URL = "jdbc:postgresql://localhost:5432/my_benchmarking_database";
 
     //Enums representing the tables present in the database
     public enum Tables {
@@ -18,6 +18,13 @@ public class DatabaseEnums {
 
     //Enums of the credentials for accessing the database
     public enum Credentials {
+        DATABASE_USER ("admin"),
+        DATABASE_PASSWORD ("adminadmin");
 
+        public final String label;
+
+        Credentials(String label) {
+            this.label = label;
+        }
     }
 }
