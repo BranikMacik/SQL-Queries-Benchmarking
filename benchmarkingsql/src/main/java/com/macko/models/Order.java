@@ -13,6 +13,7 @@ public class Order {
     //Fields
     private UUID id;
     private Customer customer;
+    //orderDate represents the date the order was issued
     private LocalDate orderDate;
     private double orderAmount;
 
