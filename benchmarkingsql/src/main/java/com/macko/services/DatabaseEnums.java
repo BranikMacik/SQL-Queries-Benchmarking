@@ -13,7 +13,14 @@ public class DatabaseEnums {
 
     //Enums representing the tables present in the database
     public enum Tables {
+        customer ("customers"),
+        order ("orders"),
+        prodcuct ("products");
 
+        public final String label;
+        Tables(String label) {
+            this.label = label;
+        }
     }
 
     //Enums of the credentials for accessing the database
