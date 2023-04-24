@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import com.macko.BenchmarkLogger;
 import com.macko.models.Customer;
 import com.macko.services.DatabaseEnums;
 import com.macko.services.interfaces.ICustomerService;
 
 public class NCustomerService implements ICustomerService{
-
     /*
      * Method getCustomerById takes a parameter of UUID (@customerId) which it then inserts into a preparedStatement.
      * The method returns a Customer object if found in the database and null if none found.
@@ -43,7 +43,8 @@ public class NCustomerService implements ICustomerService{
 
             long totalTime = endTime - startTime;
 
-            System.out.println("Total execution time: " + totalTime + " ms");
+            //System.out.println("Total execution time: " + totalTime + " ms");
+            BenchmarkLogger.writeResult("getCustomerById - Native SQL", totalTime);
 
             if (customer == null) {
                 statement.close();
@@ -101,7 +102,7 @@ public class NCustomerService implements ICustomerService{
 
             long totalTime = endTime - startTime;
 
-            System.out.println("Total execution time: " + totalTime + " ms");
+            BenchmarkLogger.writeResult("saveCustomer - Native SQL", totalTime);
 
             statement.close();
             connection.close();
