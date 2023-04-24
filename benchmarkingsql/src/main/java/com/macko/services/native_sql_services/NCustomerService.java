@@ -3,6 +3,7 @@ package com.macko.services.native_sql_services;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -13,9 +14,51 @@ import com.macko.services.interfaces.ICustomerService;
 
 public class NCustomerService implements ICustomerService{
 
+    /*
+     * Method getCustomerById takes a parameter of UUID (@customerId) which it then inserts into a preparedStatement.
+     * The method returns a Customer object if found in the database and null if none found.
+     */
     @Override
     public Customer getCustomerById(UUID customerId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getCustomerById'");
+        try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
+                                                                  DatabaseEnums.Credentials.DATABASE_USER.label, 
+                                                                  DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
+        ) {
+            String sql = "SELECT * FROM " + DatabaseEnums.Tables.customer + " WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setObject(1, customerId);
+            
+            ResultSet result = statement.executeQuery();
+            Customer customer = null;
+
+            long startTime = System.currentTimeMillis();
+
+            long endTime = System.currentTimeMillis();
+
+            if (!result.next()) {
+                System.out.println("No data found. ");
+            } else {
+                customer = new Customer(customerId, result.getString(2), result.getString(3), result.getString(4));
+            }
+
+            long totalTime = endTime - startTime;
+
+            System.out.println("Total execution time: " + totalTime + " ms");
+
+            if (customer == null) {
+                statement.close();
+                connection.close();
+                return null;
+            } else {
+                statement.close();
+                connection.close();
+                return customer;
+            }
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Something went wrong finding the user in the database.");
+            System.out.println(e);
+            return null;
+        }
     }
 
     @Override
