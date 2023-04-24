@@ -92,7 +92,6 @@ public class NCustomerService implements ICustomerService{
             
             long totalTime = endTime - startTime;
 
-            //System.out.println("Total execution time: " + totalTime + " ms");
             BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
             
             statement.close();
@@ -114,11 +113,13 @@ public class NCustomerService implements ICustomerService{
             //Using LIKE operator with wildcard '%' on both sides of the search string will match any string of any length, so that it will match both complete names as well as partial ones.
             String sql = "SELECT * FROM " + DatabaseEnums.Tables.customer + " WHERE first_name LIKE ? OR last_name LIKE ?";
             PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, "%" + name + "%");
+            statement.setString(2, "%" + name + "%");
+
+            long startTime = System.currentTimeMillis();
             
             ResultSet result = statement.executeQuery();
             List<Customer> customers = new ArrayList<Customer>();
-
-            long startTime = System.currentTimeMillis();
 
             int index = 0;
             if (!result.next()) {
@@ -136,7 +137,7 @@ public class NCustomerService implements ICustomerService{
             long totalTime = endTime - startTime;
 
             //System.out.println("Total execution time: " + totalTime + " ms");
-            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("searchCustomerByName - Native SQL", totalTime);
             
             statement.close();
             connection.close();

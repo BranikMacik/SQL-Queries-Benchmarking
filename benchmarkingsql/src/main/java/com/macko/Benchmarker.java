@@ -63,5 +63,7 @@ public class Benchmarker
         
         cNService.saveCustomer(createMockCustomer());
         cNService.getAllCustomers();
+        cNService.searchCustomerByName(getRandomFirstName());
+        cNService.searchCustomerByName(getRandomSurname());
     }
 }
