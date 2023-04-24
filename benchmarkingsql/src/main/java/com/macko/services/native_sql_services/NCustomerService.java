@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,22 +25,22 @@ public class NCustomerService implements ICustomerService{
                                                                   DatabaseEnums.Credentials.DATABASE_USER.label, 
                                                                   DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
         ) {
+            Customer customer = null;
             String sql = "SELECT * FROM " + DatabaseEnums.Tables.customer + " WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setObject(1, customerId);
+                        
+            long startTime = System.currentTimeMillis();
             
             ResultSet result = statement.executeQuery();
-            Customer customer = null;
-
-            long startTime = System.currentTimeMillis();
-
-            long endTime = System.currentTimeMillis();
 
             if (!result.next()) {
                 System.out.println("No data found. ");
             } else {
                 customer = new Customer(customerId, result.getString(2), result.getString(3), result.getString(4));
             }
+           
+            long endTime = System.currentTimeMillis();
 
             long totalTime = endTime - startTime;
 
@@ -64,12 +65,87 @@ public class NCustomerService implements ICustomerService{
 
     @Override
     public List<Customer> getAllCustomers() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllCustomers'");
+        try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
+                                                                  DatabaseEnums.Credentials.DATABASE_USER.label, 
+                                                                  DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
+        ) {
+            String sql = "SELECT * FROM " + DatabaseEnums.Tables.customer;
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet result = statement.executeQuery();
+            List<Customer> customers = new ArrayList<Customer>();
+
+            long startTime = System.currentTimeMillis();
+
+            int index = 0;
+            if (!result.next()) {
+                System.out.println("No data found. ");
+            } else if (result.next()){
+                while (result.next()) {
+                    UUID uuid = (UUID) result.getObject(1);
+                    Customer customer = new Customer(uuid, result.getString(2), result.getString(3), result.getString(3));
+                    customers.add(index, customer);
+                }
+            }
+            
+            long endTime = System.currentTimeMillis();
+            
+            long totalTime = endTime - startTime;
+
+            //System.out.println("Total execution time: " + totalTime + " ms");
+            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            
+            statement.close();
+            connection.close();
+            return customers;
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Something went wrong finding the user in the database.");
+            System.out.println(e);
+            return null;
+        }
     }
 
     @Override
     public List<Customer> searchCustomerByName(String name) {
-        throw new UnsupportedOperationException("Unimplemented method 'searchCustomerByName'");
+        try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
+                                                                  DatabaseEnums.Credentials.DATABASE_USER.label, 
+                                                                  DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
+        ) {
+            //Using LIKE operator with wildcard '%' on both sides of the search string will match any string of any length, so that it will match both complete names as well as partial ones.
+            String sql = "SELECT * FROM " + DatabaseEnums.Tables.customer + " WHERE first_name LIKE ? OR last_name LIKE ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet result = statement.executeQuery();
+            List<Customer> customers = new ArrayList<Customer>();
+
+            long startTime = System.currentTimeMillis();
+
+            int index = 0;
+            if (!result.next()) {
+                System.out.println("No data found. ");
+            } else if (result.next()){
+                while (result.next()) {
+                    UUID uuid = (UUID) result.getObject(1);
+                    Customer customer = new Customer(uuid, result.getString(2), result.getString(3), result.getString(3));
+                    customers.add(index, customer);
+                }
+            }
+            
+            long endTime = System.currentTimeMillis();
+            
+            long totalTime = endTime - startTime;
+
+            //System.out.println("Total execution time: " + totalTime + " ms");
+            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            
+            statement.close();
+            connection.close();
+            return customers;
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Something went wrong finding the user in the database.");
+            System.out.println(e);
+            return null;
+        }
     }
 
     /*
