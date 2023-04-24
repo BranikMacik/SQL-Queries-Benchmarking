@@ -15,9 +15,11 @@ public class DatabaseEnums {
     public enum Tables {
         customer ("customers"),
         order ("orders"),
+        order_line_item ("orderLineItem"),
         prodcuct ("products");
 
         public final String label;
+        
         Tables(String label) {
             this.label = label;
         }

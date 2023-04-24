@@ -10,11 +10,10 @@ import java.io.IOException;
  */
 public class BenchmarkLogger {
     
-    private static final String FILE_PATH = "../../../../benchmarking_results/benchmark.txt";
-
+    private static final String FILE_NAME = "results.txt";
     public static void writeResult(String methodName, long totalTime) {
         try {
-            File file = new File(FILE_PATH);
+            File file = new File(FILE_NAME);
             if (!file.exists()) {
                 file.createNewFile();
             }
