@@ -63,6 +63,9 @@ public class NCustomerService implements ICustomerService{
         }
     }
 
+    /* 
+     * Returns a list of all customers currently persisted in the database
+    */
     @Override
     public List<Customer> getAllCustomers() {
         try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
@@ -104,6 +107,9 @@ public class NCustomerService implements ICustomerService{
         }
     }
 
+    /*
+     * Method searchCustomerByName searches for all Customer objects that fit the String param @name regardless of whether it is the first or the second name
+     */
     @Override
     public List<Customer> searchCustomerByName(String name) {
         try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
@@ -190,13 +196,44 @@ public class NCustomerService implements ICustomerService{
     }
 
     @Override
-    public void updateCustomerFirstName(UUID customerId) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateCustomerFirstName'");
+    public void updateCustomerFirstName(UUID customerId, String firstName) {
+
     }
 
+    /*
+     * Method deleteCustomer deletes a customer object from the database with the UUID of @param customerId
+     */
     @Override
-    public void deleteCustomer(UUID custolerId) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteCustomer'");
+    public void deleteCustomer(UUID customerId) {
+        try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
+                                                                  DatabaseEnums.Credentials.DATABASE_USER.label, 
+                                                                  DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
+        ) {
+            String sql = "DELETE FROM " + DatabaseEnums.Tables.customer + " WHERE id " + customerId;
+            PreparedStatement statement = connection.prepareStatement(sql);
+                        
+            long startTime = System.currentTimeMillis();
+            
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                System.out.println("No rows affected.");
+            } else if (rowsAffected == 1) {
+                System.out.println("Customer successfully deleted.");
+            } else {
+                System.out.println("Something went wrong and multiple customers were deleted.");
+            }
+            
+            long endTime = System.currentTimeMillis();
+            
+            long totalTime = endTime - startTime;
+
+            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            
+            statement.close();
+            connection.close();
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Something went wrong finding the user in the database.");
+            System.out.println(e);
+        }    
     }
-    
 }
