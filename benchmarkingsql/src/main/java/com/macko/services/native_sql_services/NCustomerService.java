@@ -44,7 +44,7 @@ public class NCustomerService implements ICustomerService{
             long totalTime = endTime - startTime;
 
             //System.out.println("Total execution time: " + totalTime + " ms");
-            BenchmarkLogger.writeResult("getCustomerById - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("getCustomerById | Native SQL", totalTime);
 
             if (customer == null) {
                 statement.close();
@@ -93,7 +93,7 @@ public class NCustomerService implements ICustomerService{
             
             long totalTime = endTime - startTime;
 
-            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("getAllCustomers | Native SQL", totalTime);
             
             statement.close();
             connection.close();
@@ -140,7 +140,7 @@ public class NCustomerService implements ICustomerService{
             long totalTime = endTime - startTime;
 
             //System.out.println("Total execution time: " + totalTime + " ms");
-            BenchmarkLogger.writeResult("searchCustomerByName - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("searchCustomerByName | Native SQL", totalTime);
             
             statement.close();
             connection.close();
@@ -182,7 +182,7 @@ public class NCustomerService implements ICustomerService{
 
             long totalTime = endTime - startTime;
 
-            BenchmarkLogger.writeResult("saveCustomer - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("saveCustomer | Native SQL", totalTime);
 
             statement.close();
             connection.close();
@@ -217,7 +217,7 @@ public class NCustomerService implements ICustomerService{
             
             long totalTime = endTime - startTime;
 
-            BenchmarkLogger.writeResult("updateCustomerFirstName - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("updateCustomerFirstName | Native SQL", totalTime);
             
             statement.close();
             connection.close();
@@ -254,7 +254,7 @@ public class NCustomerService implements ICustomerService{
             
             long totalTime = endTime - startTime;
 
-            BenchmarkLogger.writeResult("deleteCustomer - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("deleteCustomer | Native SQL", totalTime);
             
             statement.close();
             connection.close();

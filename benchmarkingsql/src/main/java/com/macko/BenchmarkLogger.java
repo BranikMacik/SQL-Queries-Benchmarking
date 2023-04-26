@@ -19,7 +19,7 @@ public class BenchmarkLogger {
             }
 
             FileWriter writer = new FileWriter(file, true);
-            writer.write(methodName + " took " + totalTime + " ms\n");
+            writer.write(methodName + " | " + totalTime + " ms\n");
             writer.close();
 
         } catch (IOException e) {
