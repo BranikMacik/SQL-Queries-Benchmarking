@@ -11,9 +11,14 @@ import com.macko.services.interfaces.ICustomerService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 public class HCustomerService implements ICustomerService{
 
+    /*
+     * getCustomerById retrieves a customer entity based on @param long customerId
+     */
     @Override
     public Customer getCustomerById(long customerId) {
         Customer customer = null;
@@ -70,9 +75,34 @@ public class HCustomerService implements ICustomerService{
         return customers;
     }
 
+    /*
+     * searchCustomerByName seraches the database for an entity whose firstName begins with the @param name
+     */
     @Override
     public List<Customer> searchCustomerByName(String name) {
-        throw new UnsupportedOperationException("Unimplemented method 'searchCustomerByName'");
+        List<Customer> customers = null;
+        try (Session session = DatabaseSessionManager.getInstance().getSession()) {
+            long startTime = System.currentTimeMillis();
+            
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Customer> criteriaQuery = criteriaBuilder.createQuery(Customer.class);
+            Root<Customer> root = criteriaQuery.from(Customer.class);
+
+            Predicate namePredicate = criteriaBuilder.equal(root.get("firstName"), name);
+            criteriaQuery.where(namePredicate);
+
+            customers = session.createQuery(criteriaQuery).getResultList();
+        
+            long endTime = System.currentTimeMillis();
+            long totalTime = endTime - startTime;
+            BenchmarkLogger.writeResult("searchCustomerByName | Hibernate", totalTime);
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            DatabaseSessionManager.getInstance().closeSession();
+        }
+
+        return customers;
     }
 
     /*
