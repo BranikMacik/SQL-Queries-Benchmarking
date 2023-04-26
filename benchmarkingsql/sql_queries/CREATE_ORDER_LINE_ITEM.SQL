@@ -4,9 +4,9 @@
 
 CREATE TABLE IF NOT EXISTS public.order_line_item
 (
-    id uuid NOT NULL,
-    order_id uuid NOT NULL,
-    product_id uuid NOT NULL,
+    id bigint NOT NULL,
+    order_id bigint NOT NULL,
+    product_id bigint NOT NULL,
     quantity integer NOT NULL,
     price double precision NOT NULL,
     CONSTRAINT order_line_item_pkey PRIMARY KEY (id),
@@ -23,4 +23,4 @@ CREATE TABLE IF NOT EXISTS public.order_line_item
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.order_line_item
-    OWNER to postgres;
+    OWNER to admin;
