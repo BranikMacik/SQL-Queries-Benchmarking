@@ -25,35 +25,25 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-envers -->
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>5.5.7.Final</version>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-envers</artifactId>
+        <version>6.2.1.Final</version>
+        <type>pom</type>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-envers</artifactId>
-      <version>5.5.7.Final</version>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>8.0.0.Final</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
     <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>7.0.1.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>6.2.1.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>com.microsoft.sqlserver</groupId>
-      <artifactId>mssql-jdbc</artifactId>
-      <version>9.4.1.jre11</version>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.27</version>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>6.2.1.Final</version>
+        <type>pom</type>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -111,5 +101,11 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
   </build>
 </project>
