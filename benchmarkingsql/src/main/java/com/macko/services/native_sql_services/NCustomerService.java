@@ -150,7 +150,7 @@ public class NCustomerService implements ICustomerService{
             return customers;
         } catch (SQLException | NullPointerException e) {
             System.out.println("Something went wrong finding the user in the database.");
-            System.out.println(e);
+            e.printStackTrace(null);;
             return null;
         }
     }
@@ -178,7 +178,7 @@ public class NCustomerService implements ICustomerService{
 
             if (rowsAffected == 0) {
                 //Throw exception
-                System.out.println("Something went wrong saving the customer. " + rowsAffected + " rows affected.");
+               throw new SQLException("Something went wrong saving the customer. " + rowsAffected + " rows affected.");
             } else {
                 System.out.print(rowsAffected + " rows have been inserted. ");
             }
@@ -195,9 +195,39 @@ public class NCustomerService implements ICustomerService{
         }
     }
 
+    /*
+     * Method updateCustomerFirstname changes the customer's first name based on @param customerId
+     */
     @Override
     public void updateCustomerFirstName(UUID customerId, String firstName) {
+        try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
+                                                                  DatabaseEnums.Credentials.DATABASE_USER.label, 
+                                                                  DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
+        ) {
+            String sql = "UPDATE " + DatabaseEnums.Tables.customer + " SET first_name = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, firstName);
+            statement.setObject(2, customerId);            
 
+            long startTime = System.currentTimeMillis();
+            
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("No rows affected");
+            }
+
+            long endTime = System.currentTimeMillis();
+            
+            long totalTime = endTime - startTime;
+
+            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            
+            statement.close();
+            connection.close();
+        } catch (SQLException | NullPointerException e) {
+            System.out.println("Something went wrong finding the user in the database.");
+            System.out.println(e);
+        }    
     }
 
     /*
@@ -216,11 +246,11 @@ public class NCustomerService implements ICustomerService{
             
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
-                System.out.println("No rows affected.");
+                throw new SQLException("No rows affected.");
             } else if (rowsAffected == 1) {
                 System.out.println("Customer successfully deleted.");
             } else {
-                System.out.println("Something went wrong and multiple customers were deleted.");
+                throw new SQLException("Something went wrong and multiple customers were deleted.");
             }
             
             long endTime = System.currentTimeMillis();
