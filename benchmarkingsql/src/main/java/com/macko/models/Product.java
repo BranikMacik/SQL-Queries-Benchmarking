@@ -1,16 +1,17 @@
 package com.macko.models;
 
-import java.util.UUID;
-
 public class Product {
     //Fields
-    private UUID id;
+    private long id;
+    
     private String productName;
+
     private String description;
+
     private double price;
 
     //Getters
-    public UUID getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -39,8 +40,14 @@ public class Product {
         this.price = price;
     }
 
-    //Constructor
-    public Product(UUID id, String productName, String description, double price) {
+    //Constructors
+    /*
+     * An empty constructor for Hibernate
+     */
+    public Product() {
+    }
+
+    public Product(long id, String productName, String description, double price) {
         this.id = id;
         this.productName = productName;
         this.description = description;

@@ -1,7 +1,6 @@
 package com.macko.models;
 
 import java.time.LocalDate;
-import java.util.UUID;
 /*
  * The purpose of this class is to serve as a mock-up of a real-life class
  * to better simulate a plausible scenario and thus getting more valuable 
@@ -11,14 +10,17 @@ import java.util.UUID;
 
 public class Order {
     //Fields
-    private UUID id;
+    private long id;
+    
     private Customer customer;
+    
     //orderDate represents the date the order was issued
     private LocalDate orderDate;
+
     private double orderAmount;
 
     //Getters
-    public UUID getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -47,8 +49,14 @@ public class Order {
         this.orderAmount = amount;
     }
 
-    //Constructor
-    public Order(UUID id, Customer customer, LocalDate orderDate, double amount) {
+    //Constructors
+    /*
+     * An empty constructor for Hibernate
+     */
+    public Order() {
+    }
+
+    public Order(long id, Customer customer, LocalDate orderDate, double amount) {
         this.id = id;
         this.customer = customer;
         this.orderDate = orderDate;

@@ -1,22 +1,33 @@
 package com.macko.models;
 
-import java.util.UUID;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 /*
  * The purpose of this class is to serve as a mock-up of a real-life class
  * to better simulate a plausible scenario and thus getting more valuable 
  * and relevant information out of it. This class particularly takes on 
  * the role a Customer.   
  */
-
+@Entity
+@Table(name = "customer")
 public class Customer {
     //Fields
-    private UUID id;
+    @Id
+    private long id;
+    
+    @Column(name = "first_name")
     private String firstName;
+    
+    @Column(name = "last_name")
     private String lastName;
+    
+    @Column(name = "email")
     private String email;
 
     //Getters
-    public UUID getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -45,8 +56,14 @@ public class Customer {
         this.email = email;
     }
 
-    //Constructor
-    public Customer(UUID id, String fName, String lName, String email) {
+    //Constructors
+    /*
+     * An empty constructor necessary for Hibernate to create empty objects 
+     */
+    public Customer() {
+    }
+
+    public Customer(long id, String fName, String lName, String email) {
         this.id = id;
         this.firstName = fName;
         this.lastName = lName;
