@@ -1,13 +1,12 @@
 package com.macko.services.interfaces;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.macko.models.Customer;
 
 public interface ICustomerService {
 
-    Customer getCustomerById(UUID customerId);
+    Customer getCustomerById(long customerId);
     
     List<Customer> getAllCustomers();
 
@@ -15,7 +14,7 @@ public interface ICustomerService {
     
     void saveCustomer(Customer customer);
 
-    void updateCustomerFirstName(UUID customerId);
+    void updateCustomerFirstName(long customerId, String fName);
 
-    void deleteCustomer(UUID custolerId);
+    void deleteCustomer(long customerId);
 }

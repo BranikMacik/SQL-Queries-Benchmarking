@@ -9,8 +9,8 @@ package com.macko.services;
 
 public class DatabaseEnums {
     //Database URL used for database connectivity
-    public static final String DB_URL = "jdbc:postgresql://localhost:5432/my_benchmarking_database";
-
+    public static final String DB_URL = "jdbc:postgresql://localhost:5432/my_nativesql_benchmarking_database";
+    public static final String HDB_URL = "jdbc:postgresql://localhost:5432/my_hibernate_benchmarking_database";
     //Enums representing the tables present in the database
     public enum Tables {
         customer ("customers"),

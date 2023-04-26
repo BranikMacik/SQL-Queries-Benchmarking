@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.macko.BenchmarkLogger;
 import com.macko.models.Customer;
@@ -16,11 +15,11 @@ import com.macko.services.interfaces.ICustomerService;
 
 public class NCustomerService implements ICustomerService{
     /*
-     * Method getCustomerById takes a parameter of UUID (@customerId) which it then inserts into a preparedStatement.
+     * Method getCustomerById takes a parameter of long (@customerId) which it then inserts into a preparedStatement.
      * The method returns a Customer object if found in the database and null if none found.
      */
     @Override
-    public Customer getCustomerById(UUID customerId) {
+    public Customer getCustomerById(long customerId) {
         try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
                                                                   DatabaseEnums.Credentials.DATABASE_USER.label, 
                                                                   DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
@@ -28,7 +27,7 @@ public class NCustomerService implements ICustomerService{
             Customer customer = null;
             String sql = "SELECT * FROM " + DatabaseEnums.Tables.customer + " WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setObject(1, customerId);
+            statement.setLong(1, customerId);
                         
             long startTime = System.currentTimeMillis();
             
@@ -85,8 +84,7 @@ public class NCustomerService implements ICustomerService{
                 System.out.println("No data found. ");
             } else if (result.next()){
                 while (result.next()) {
-                    UUID uuid = (UUID) result.getObject(1);
-                    Customer customer = new Customer(uuid, result.getString(2), result.getString(3), result.getString(3));
+                    Customer customer = new Customer(result.getLong(1), result.getString(2), result.getString(3), result.getString(3));
                     customers.add(index, customer);
                 }
             }
@@ -132,8 +130,7 @@ public class NCustomerService implements ICustomerService{
                 System.out.println("No data found. ");
             } else if (result.next()){
                 while (result.next()) {
-                    UUID uuid = (UUID) result.getObject(1);
-                    Customer customer = new Customer(uuid, result.getString(2), result.getString(3), result.getString(3));
+                    Customer customer = new Customer(result.getLong(1), result.getString(2), result.getString(3), result.getString(3));
                     customers.add(index, customer);
                 }
             }
@@ -150,7 +147,7 @@ public class NCustomerService implements ICustomerService{
             return customers;
         } catch (SQLException | NullPointerException e) {
             System.out.println("Something went wrong finding the user in the database.");
-            e.printStackTrace(null);;
+            e.printStackTrace();;
             return null;
         }
     }
@@ -165,7 +162,7 @@ public class NCustomerService implements ICustomerService{
         try (Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, DatabaseEnums.Credentials.DATABASE_USER.label, DatabaseEnums.Credentials.DATABASE_PASSWORD.label)) {
             String SQL_message_information = "INSERT INTO " + DatabaseEnums.Tables.customer + " VALUES (?, ?, ?, ?) ON CONFLICT (id) DO NOTHING";    
             PreparedStatement statement = connection.prepareStatement(SQL_message_information);
-            statement.setObject(1, customer.getId());
+            statement.setLong(1, customer.getId());
             statement.setString(2, customer.getFirstName());
             statement.setString(3, customer.getLastName());
             statement.setString(4, customer.getEmail());
@@ -199,7 +196,7 @@ public class NCustomerService implements ICustomerService{
      * Method updateCustomerFirstname changes the customer's first name based on @param customerId
      */
     @Override
-    public void updateCustomerFirstName(UUID customerId, String firstName) {
+    public void updateCustomerFirstName(long customerId, String firstName) {
         try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
                                                                   DatabaseEnums.Credentials.DATABASE_USER.label, 
                                                                   DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
@@ -207,7 +204,7 @@ public class NCustomerService implements ICustomerService{
             String sql = "UPDATE " + DatabaseEnums.Tables.customer + " SET first_name = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, firstName);
-            statement.setObject(2, customerId);            
+            statement.setLong(2, customerId);            
 
             long startTime = System.currentTimeMillis();
             
@@ -220,7 +217,7 @@ public class NCustomerService implements ICustomerService{
             
             long totalTime = endTime - startTime;
 
-            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("updateCustomerFirstName - Native SQL", totalTime);
             
             statement.close();
             connection.close();
@@ -231,10 +228,10 @@ public class NCustomerService implements ICustomerService{
     }
 
     /*
-     * Method deleteCustomer deletes a customer object from the database with the UUID of @param customerId
+     * Method deleteCustomer deletes a customer object from the database with the long of @param customerId
      */
     @Override
-    public void deleteCustomer(UUID customerId) {
+    public void deleteCustomer(long customerId) {
         try ( Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
                                                                   DatabaseEnums.Credentials.DATABASE_USER.label, 
                                                                   DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
@@ -257,7 +254,7 @@ public class NCustomerService implements ICustomerService{
             
             long totalTime = endTime - startTime;
 
-            BenchmarkLogger.writeResult("getAllCustomers - Native SQL", totalTime);
+            BenchmarkLogger.writeResult("deleteCustomer - Native SQL", totalTime);
             
             statement.close();
             connection.close();
