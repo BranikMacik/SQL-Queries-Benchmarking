@@ -43,6 +43,7 @@ public class Benchmarker
         long currentMillis = System.currentTimeMillis();
         long randomBits = rand.nextLong() & 0x3FFFFFFF; // use 30 random bits
         long id = (currentMillis << 30) | randomBits;
+        id = id * (-1);
         return id;
     }
 
