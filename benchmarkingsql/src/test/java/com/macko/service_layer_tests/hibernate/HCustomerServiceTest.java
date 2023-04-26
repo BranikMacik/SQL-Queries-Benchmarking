@@ -22,7 +22,7 @@ public class HCustomerServiceTest {
      */
     @Test
     public void testConnectionToDatabase() {
-        try (Connection connection = DriverManager.getConnection(DatabaseEnums.DB_URL, 
+        try (Connection connection = DriverManager.getConnection(DatabaseEnums.HDB_URL, 
                                                                  DatabaseEnums.Credentials.DATABASE_USER.label, 
                                                                  DatabaseEnums.Credentials.DATABASE_PASSWORD.label)) {
             System.out.println("Connected");

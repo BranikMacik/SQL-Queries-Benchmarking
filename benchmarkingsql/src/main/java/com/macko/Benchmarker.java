@@ -1,15 +1,12 @@
 package com.macko;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import com.macko.models.Customer;
+import com.macko.services.hibernate_services.HCustomerService;
 import com.macko.services.interfaces.ICustomerService;
 import com.macko.services.native_sql_services.NCustomerService;
 
@@ -42,28 +39,34 @@ public class Benchmarker
         return surnameList.get(index);
     }
 
+    public static synchronized long generateRandomLong() {
+        long currentMillis = System.currentTimeMillis();
+        long randomBits = rand.nextLong() & 0x3FFFFFFF; // use 30 random bits
+        long id = (currentMillis << 30) | randomBits;
+        return id;
+    }
+
     public static Customer createMockCustomer() {
-        Customer mockCustomer = mock(Customer.class);
-        
+        long id = generateRandomLong();
         String fName = getRandomFirstName();
         String lName = getRandomSurname();
         String email = fName + lName + rand.nextInt(100) + "@example.com";
         
-        when(mockCustomer.getId()).thenReturn(UUID.randomUUID());
-        when(mockCustomer.getFirstName()).thenReturn(fName);
-        when(mockCustomer.getLastName()).thenReturn(lName);
-        when(mockCustomer.getEmail()).thenReturn(email);
-        
-        return mockCustomer;
+        Customer customer = new Customer(id, fName, lName, email);
+        return customer;
     }    
     
     public static void main( String[] args )
     {
-        ICustomerService cNService = new NCustomerService();
+        ICustomerService nCService = new NCustomerService();
+        ICustomerService hCService = new HCustomerService();
         
-        cNService.saveCustomer(createMockCustomer());
-        cNService.getAllCustomers();
-        cNService.searchCustomerByName(getRandomFirstName());
-        cNService.searchCustomerByName(getRandomSurname());
+        nCService.saveCustomer(createMockCustomer());
+        nCService.getAllCustomers();
+        nCService.searchCustomerByName(getRandomFirstName());
+        nCService.searchCustomerByName(getRandomSurname());
+
+        hCService.saveCustomer(createMockCustomer());
+        //hCService.getCustomerById(null);
     }
 }
