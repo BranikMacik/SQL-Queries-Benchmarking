@@ -1,5 +1,7 @@
 package com.macko.models;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -54,6 +56,26 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return this.id + ", " + this.firstName + ", " + this.lastName + ", " + this.email;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Customer)) {
+            return false;
+        }
+        Customer other = (Customer) obj;
+        return this.id == other.id &&
+                Objects.equals(this.firstName, other.firstName) &&
+                Objects.equals(this.lastName, other.lastName) &&
+                Objects.equals(this.email, other.email);
     }
 
     //Constructors

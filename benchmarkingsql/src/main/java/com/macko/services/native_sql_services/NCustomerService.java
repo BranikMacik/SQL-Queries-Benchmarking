@@ -236,7 +236,7 @@ public class NCustomerService implements ICustomerService{
                                                                   DatabaseEnums.Credentials.DATABASE_USER.label, 
                                                                   DatabaseEnums.Credentials.DATABASE_PASSWORD.label)
         ) {
-            String sql = "DELETE FROM " + DatabaseEnums.Tables.customer + " WHERE id " + customerId;
+            String sql = "DELETE FROM " + DatabaseEnums.Tables.customer + " WHERE id = " + customerId;
             PreparedStatement statement = connection.prepareStatement(sql);
                         
             long startTime = System.currentTimeMillis();
