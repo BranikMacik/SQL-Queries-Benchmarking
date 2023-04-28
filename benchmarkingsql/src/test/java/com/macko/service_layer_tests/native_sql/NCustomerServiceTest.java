@@ -40,7 +40,7 @@ public class NCustomerServiceTest {
     
     @Test
     public void testGetCustomerById() {
-        Customer customer = cService.getCustomerById(1172076883381449323L);
+        Customer customer = cService.getCustomerById(1075070836085980924L);
         long id = 1172076883381449323L;
         Customer actualCustomer = new Customer(id, "Orlando", "Green", "OrlandoGreen95@example.com");
         boolean result = actualCustomer.equals(customer);

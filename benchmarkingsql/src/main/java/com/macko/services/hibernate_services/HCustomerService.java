@@ -29,6 +29,8 @@ public class HCustomerService implements ICustomerService{
             
             if (customer == null) {
                 System.out.println("No data found. ");
+            } else {
+                System.out.println(customer);
             }
 
             long totalTime = endTime - startTime;

@@ -37,6 +37,7 @@ public class NCustomerService implements ICustomerService{
                 System.out.println("No data found. ");
             } else {
                 customer = new Customer(customerId, result.getString(2), result.getString(3), result.getString(4));
+                System.out.println(customer);
             }
            
             long endTime = System.currentTimeMillis();

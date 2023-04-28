@@ -2,8 +2,12 @@ package com.macko;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.macko.models.Customer;
 import com.macko.services.hibernate_services.HCustomerService;
@@ -16,14 +20,65 @@ import com.macko.services.native_sql_services.NCustomerService;
 public class Benchmarker 
 {
     public static Random rand = new Random();
- 
+    private static List<Long> ids = new ArrayList<Long>();
     ////////////////// MAIN ////////////////////
 
     public static void main( String[] args )
     {
-        //Benchmarker.benchmarkSavingCustomers(1000);
-        //Benchmarker.benchmarkSearchCustomerByName(1000);
-        Benchmarker.benchmarkGettingAllCustomers(1000);
+        ICustomerService nCService = new NCustomerService();
+        ICustomerService hCService = new HCustomerService();
+
+        //Benchmarker.benchmarkSavingCustomers(5000);
+        // Benchmarker.benchmarkGettingAllCustomers(1000);
+
+        List<Long> ids = new ArrayList<>();
+        
+        int index = 0;
+        while (index < 2000) {
+            List<Customer> results = nCService.searchCustomerByName(getRandomFirstName());
+            for (Customer customer : results) {
+                if (!ids.contains(customer.getId()))
+                ids.add(customer.getId());
+            }            
+            index++;
+        }
+
+        index = 0;
+        while(index < 2000) {
+            List<Customer> results = hCService.searchCustomerByName(getRandomFirstName());
+            for (Customer customer : results) {
+                if (!ids.contains(customer.getId()))
+                ids.add(customer.getId());
+            }            
+            index++;
+        }
+        /* 
+        index = 0;
+        while (index < 2000) {
+            nCService.getCustomerById(ids.get(rand.nextInt(ids.size())));
+            index++;
+        }
+
+        index = 0;
+        
+        while(index < 2000) {
+            hCService.getCustomerById(ids.get(rand.nextInt(ids.size())));
+            index++;
+        }
+        */
+        
+        index = 0;
+        while (index < 2000) {
+            nCService.deleteCustomer(ids.get(rand.nextInt(ids.size())));
+            index++;
+        }
+
+        index = 0;
+        
+        while(index < 2000) {
+            hCService.deleteCustomer(ids.get(rand.nextInt(ids.size())));
+            index++;
+        }
     }
 
     /////////// BENCHMARKING METHODS //////////////
@@ -64,6 +119,27 @@ public class Benchmarker
         }
     }
 
+    /*
+     * It is necessary to run this benchmark along with another that utilizes the generateRandomLong() method
+     */
+    public static void benchmarkGetCustomerById(int methodCalls, long id) {
+        ICustomerService nCService = new NCustomerService();
+        ICustomerService hCService = new HCustomerService();
+
+        int index = 0;
+        while (index < methodCalls) {
+            nCService.getCustomerById(id);
+            index++;
+        }
+
+        index = 0;
+        
+        while(index < methodCalls) {
+            hCService.getCustomerById(id);
+            index++;
+        }
+    }
+
     public static void benchmarkSearchCustomerByName(int methodCalls) {
         ICustomerService nCService = new NCustomerService();
         ICustomerService hCService = new HCustomerService();
@@ -82,13 +158,58 @@ public class Benchmarker
         }
     }
 
+    /*
+     * It is necessary to run this along other benchmarking methods
+     */
+    public static void benchmarkUpdateCustomerFirstName(int methodCalls, long id) {
+        ICustomerService nCService = new NCustomerService();
+        ICustomerService hCService = new HCustomerService();
+
+        int index = 0;
+        while (index < methodCalls) {
+            nCService.updateCustomerFirstName(id, Benchmarker.getRandomFirstName());
+            index++;
+        }
+
+        index = 0;
+        
+        while(index < methodCalls) {
+            hCService.updateCustomerFirstName(id, Benchmarker.getRandomFirstName());
+            index++;
+        }
+    }
+
+    public static void benchmarkDeleteCustomer(int methodCalls, long id) {
+        ICustomerService nCService = new NCustomerService();
+        ICustomerService hCService = new HCustomerService();
+
+        int index = 0;
+        while (index < methodCalls) {
+            nCService.deleteCustomer(id);
+            index++;
+        }
+
+        index = 0;
+        
+        while(index < methodCalls) {
+            hCService.deleteCustomer(id);
+            index++;
+        }
+    }
+
     //////////////////// HELPER METHODS //////////////////////
     public static synchronized long generateRandomLong() {
         long currentMillis = System.currentTimeMillis();
         long randomBits = rand.nextLong() & 0x3FFFFFFF; // use 30 random bits
         long id = (currentMillis << 30) | randomBits;
         id = id * (-1);
+        ids.add(id);
         return id;
+    }
+
+    public static long pickRandomId() {
+        int index = rand.nextInt(ids.size());
+        return ids.get(index);
     }
 
     public static Customer createMockCustomer() {

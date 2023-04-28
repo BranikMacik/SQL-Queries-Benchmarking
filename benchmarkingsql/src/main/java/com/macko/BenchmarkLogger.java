@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /*
- * This class logs the results of benchmarking into a file designated as benchmark.txt found in the /benchmarking_results directory.
+ * This class logs the results of benchmarking into a file designated as results.txt.
  * If this file already exists, it countinues to write the results into the said file. 
  */
 public class BenchmarkLogger {
